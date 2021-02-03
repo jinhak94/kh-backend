@@ -13,7 +13,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>계산 결과</title>
 <style>
 	#main{
 		color: blue;
