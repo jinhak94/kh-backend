@@ -39,27 +39,38 @@ public class MemberEnrollServlet extends HttpServlet {
 		//1. 인코딩처리
 		request.setCharacterEncoding("utf-8");
 		
+		Date birthDay = null;
 		String date = request.getParameter("birthDay");
+		if(!(date.equals(""))) {
+			birthDay = Date.valueOf(date);
+		}
 //		Date enrollDate = new java.sql.Date(System.currentTimeMillis());
 		String[] hobbyArr = request.getParameterValues("hobby");
 		String hobby = "";
-		for(int i = 0; i < hobbyArr.length; i++) {
-			if(i!=0 && i==(hobbyArr.length-1))
-				hobby+= ", ";
-			hobby += hobbyArr[i];
+		if(hobbyArr!=null) {
+			for(int i = 0; i < hobbyArr.length; i++) {
+				if(i!=0 && i==(hobbyArr.length-1))
+					hobby+= ", ";
+				hobby += hobbyArr[i];
+			}
 		}
-			
+		String email = request.getParameter("email");
+		if(email.equals("")) {
+			email = null;
+		}
+		String address = request.getParameter("address");
+		if(address.equals("")) {
+			address = null;
+		}
 		Member member = new Member();
 		member.setMemberId(request.getParameter("memberId"));
 		member.setPassword(request.getParameter("password"));
 		member.setMemberName(request.getParameter("memberName"));
 		member.setGender(request.getParameter("gender"));
-		if(date != null) {	
-			member.setBirthDay(Date.valueOf(date));
-		}
-		member.setEmail(request.getParameter("email"));
+		member.setBirthDay(birthDay);
+		member.setEmail(email);
 		member.setPhone(request.getParameter("phone"));
-		member.setAddress(request.getParameter("address"));
+		member.setAddress(address);
 		member.setHobby(hobby);		
 		member.setEnrollDate(null);
 				
