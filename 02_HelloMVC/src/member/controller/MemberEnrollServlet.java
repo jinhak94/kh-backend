@@ -66,17 +66,13 @@ public class MemberEnrollServlet extends HttpServlet {
 		int enrollChk = memberService.insertMember(member);
 		if(enrollChk != 0) {
 			request.setAttribute("msg", "회원가입에 성공하셨습니다.");
-			request.setAttribute("loc", request.getContextPath());
-			RequestDispatcher reqDispatcher = 
-					request.getRequestDispatcher("/index.jsp");
-			reqDispatcher.forward(request, response);
 		}else {
 			request.setAttribute("msg", "회원가입에 실패하셨습니다..");
-			request.setAttribute("loc", request.getContextPath());
-			RequestDispatcher reqDispatcher = 
-					request.getRequestDispatcher("/index.jsp");
-			reqDispatcher.forward(request, response);
 		}
+		request.setAttribute("loc", request.getContextPath());
+		RequestDispatcher reqDispatcher = 
+				request.getRequestDispatcher("/index.jsp");
+		reqDispatcher.forward(request, response);
 	}
 }
 
