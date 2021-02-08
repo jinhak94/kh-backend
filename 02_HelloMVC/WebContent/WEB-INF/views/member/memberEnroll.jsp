@@ -17,6 +17,13 @@ $(function(){
             memberId_.select();
             return false;
         }
+        //아이디 중복검사
+    	var $idValid = $("#idValid");
+    	if($idValid.val() != 1){
+    	alert("아이디 중복검사 해주세요.");
+    	$idValid.focus();
+    	return false;
+    	}
 
         //2. 이름 검사
         if(/^[가-힣]{2,}$/.test(memberName.value)==false){
@@ -39,19 +46,81 @@ $(function(){
             password_.focus();
             return false;
         }
+        
+        var $phone = $("#phone");
+        //-제거하기
+        $phone.val($phone.val().replace(/[^0-9]/g, ""));//숫자아닌 문자(복수개)제거하기
+        
+        if(/^010[0-9]{8}$/.test($phone.val()) == false){
+        	alert("유효한 전화번호가 아닙니다.");
+        	$phone.select();
+        	return false;
+        }
+        
         return true;
     }
+	/**
+	* 중복 검사 이후 아이디를 변경한 경우, 다시 중복검사를 해야한다.
+	*/
+	//아이디 중복검사 여부
+	//생성자, 자바객체 모두 가능
+	$("#memberId_").change(function(){
+		$("#idValid").val(0);
+	});
 });
-</script>
 
+/**
+ * 
+ */
+
+ 
+ /**
+ * 아이디 중복 검사
+ */
+function checkIdDuplicate(){
+	//1. 아이디 유효성 검사
+	var $memberId = $(memberId_);
+	if(/^[a-zA-Z0-9_]{4,}$/.test($memberId.val()) == false){
+		alert("유효한 아이디를 입력해주세요.");
+		$memberId.select();
+		return false;
+	}
+
+	
+	//2. 팝업을 통해 중복검사
+	//폼제출 + 팝업
+	var title = "checkIdDuplicatePopup";
+	var spec = "left=500px, top=300px, width=300px, height=200px";
+	open("", title, spec);
+	
+	
+	//var $frm = $("[name=checkIdDuplicateFrm]");
+	var $frm = $(document.checkIdDuplicateFrm);// name값은 document에서 바로 접근가능
+	//아이디값 세팅
+	$frm.find("[name=memberId]")
+		.val($memberId.val());
+	$frm.attr("action", "<%= request.getContextPath() %>/member/checkIdDuplicate")
+		.attr("method", "POST")
+		.attr("target", title) //폼과 팝업 연결 설정
+		.submit();
+}
+</script>
+<!-- 아이디 중복검사용 폼 -->
+<form name="checkIdDuplicateFrm">
+	<input type="hidden" name="memberId" />
+</form>
 	<h2>회원 가입 정보 입력</h2>
-	<form name="memberEnrollFrm" action="<%=request.getContextPath() %>/member/memberEnroll" method="post">
+	<form name="memberEnrollFrm" 
+			action="<%=request.getContextPath() %>/member/memberEnroll" 
+			method="post">
 		<table>
 			<tr>
 				<th>아이디<sup>*</sup></th>
 				<td>
-				<!-- 4글자 이상인지 -->
 					<input type="text" placeholder="4글자이상" name="memberId" id="memberId_" required>
+					<input type="button" value="중복검사" onclick="checkIdDuplicate();"/>
+					<input type="hidden" id="idValid" value="0" />
+					<%-- 중복검사 통과인경우 1 / 통과하지 못한 경우 0 --%>
 				</td>
 			</tr>
 			<tr>

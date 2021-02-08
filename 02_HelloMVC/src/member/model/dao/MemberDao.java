@@ -75,7 +75,7 @@ public class MemberDao {
 			close(rset);
 			close(pstmt);
 		}
-		System.out.println("member@dao = " + member);
+//		System.out.println("member@dao = " + member);
 		return member;
 	}
 
@@ -93,7 +93,7 @@ public class MemberDao {
 			pstmt.setString(1, member.getMemberId());
 			pstmt.setString(2, member.getPassword());
 			pstmt.setString(3, member.getMemberName());
-			pstmt.setNString(4, "U");
+			pstmt.setString(4, "U");
 			pstmt.setString(5, member.getGender());
 			pstmt.setDate(6, member.getBirthDay());
 			pstmt.setString(7, member.getEmail());
@@ -109,8 +109,75 @@ public class MemberDao {
 			close(rset);
 			close(pstmt);
 		}
-		System.out.println("member@dao = " + member);
-		System.out.println("result = " + result);
+//		System.out.println("member@dao = " + member);
+//		System.out.println("result = " + result);
 		return result;
+	}
+
+	public int updateOne(Connection conn, Member member) {
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String sql = prop.getProperty("updateOne");
+		int result = 0;
+		
+		try {
+			//1.PreparedStatement객체생성(미완성쿼리 값대입)
+			pstmt = conn.prepareStatement(sql);
+			//insertOne = insert into member values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, sysdate);
+			//updateOne = update member set 
+			//member_id = ?, password = ?, member_name = ?, 
+			//member_role = ?, gender = ?, birthday = ?, 
+			//email = ?, phone = ?, address = ?, hobby = ? 
+			//where member_id = ?
+
+			pstmt.setString(1, member.getMemberId());
+			pstmt.setString(2, member.getPassword());
+			pstmt.setString(3, member.getMemberName());
+			pstmt.setString(4, member.getMemberRole());
+			pstmt.setString(5, member.getGender());
+			pstmt.setDate(6, member.getBirthDay());
+			pstmt.setString(7, member.getEmail());
+			pstmt.setString(8, member.getPhone());
+			pstmt.setString(9, member.getAddress());
+			pstmt.setString(10, member.getHobby());
+			pstmt.setString(11, member.getMemberId());
+			
+			result = pstmt.executeUpdate();			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			//3.자원반납(ResultSet, PreparedStatement)
+			close(rset);
+			close(pstmt);
+		}
+//		System.out.println("member@dao = " + member);
+//		System.out.println("result = " + result);
+		return result;
+	}
+
+	public int deleteOne(Connection conn, String memberId) {
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String sql = prop.getProperty("deleteOne");
+		int result = 0;
+		
+		try {
+			//1.PreparedStatement객체생성(미완성쿼리 값대입)
+			pstmt = conn.prepareStatement(sql);
+			//deleteOne = delete from member where member_id = ?
+
+			pstmt.setString(1, memberId);
+			result = pstmt.executeUpdate();			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			//3.자원반납(ResultSet, PreparedStatement)
+			close(rset);
+			close(pstmt);
+		}
+//		System.out.println("member@dao = " + member);
+//		System.out.println("result = " + result);
+		return result;
+		
 	}
 }

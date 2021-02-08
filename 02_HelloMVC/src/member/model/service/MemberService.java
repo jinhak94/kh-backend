@@ -2,7 +2,6 @@ package member.model.service;
 
 import java.sql.Connection;
 
-import common.JDBCTemplate;
 import member.model.dao.MemberDao;
 import member.model.vo.Member;
 import static common.JDBCTemplate.*;
@@ -31,6 +30,32 @@ public class MemberService {
 	public int insertMember(Member member) {
 		Connection conn = getConnection();
 		int chk = memberDao.insertOne(conn, member);
+		if(chk>0)
+			commit(conn);
+		else 
+			rollback(conn);
+		close(conn);
+		return chk;
+	}
+
+	public int updateMember(Member member) {
+		Connection conn = getConnection();
+		int chk = memberDao.updateOne(conn, member);
+		if(chk>0)
+			commit(conn);
+		else 
+			rollback(conn);
+		close(conn);
+		return chk;
+	}
+
+	public int deleteMember(String memberId) {
+		Connection conn = getConnection();
+		int chk = memberDao.deleteOne(conn, memberId);
+		if(chk>0)
+			commit(conn);
+		else 
+			rollback(conn);
 		close(conn);
 		return chk;
 	}

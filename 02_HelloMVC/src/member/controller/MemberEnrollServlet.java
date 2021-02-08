@@ -80,6 +80,7 @@ public class MemberEnrollServlet extends HttpServlet {
 		}else {
 			request.setAttribute("msg", "회원가입에 실패하셨습니다..");
 		}
+		//DML, login 등 요청후 반드시 url을 변경해서 새로고침 사고를 방지한다.
 		request.setAttribute("loc", request.getContextPath());
 		RequestDispatcher reqDispatcher = 
 				request.getRequestDispatcher("/index.jsp");

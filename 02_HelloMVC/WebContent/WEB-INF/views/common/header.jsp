@@ -3,11 +3,11 @@
 <%@page import="member.model.vo.Member"%>
 <%
 	String msg = (String)request.getAttribute("msg");
-	System.out.println("msg@header.jsp = " + msg);
+// 	System.out.println("msg@header.jsp = " + msg);
 	String loc = (String) request.getAttribute("loc");
-	System.out.println("loc@header.jsp = " + loc);
+// 	System.out.println("loc@header.jsp = " + loc);
 	Member memberLoggedIn = (Member) session.getAttribute("memberLoggedIn");
-	System.out.println("memberLoggedIn@header.jsp = " + memberLoggedIn);
+// 	System.out.println("memberLoggedIn@header.jsp = " + memberLoggedIn);
 
 	//서버로 전송된 쿠키값 확인
 	String saveId = null;
@@ -20,7 +20,7 @@
 				break;
 			}
 		}
-		System.out.println("saveId@header.jsp = " + saveId);
+// 		System.out.println("saveId@header.jsp = " + saveId);
 	}	
 %>
 <!DOCTYPE html>
@@ -105,7 +105,7 @@ $(function(){
 						<input 
 							type="button" 
 							value="회원가입"
-							onclick="location.href='<%= request.getContextPath()%>/member/memberEnroll'";/>
+							onclick="location.href='<%= request.getContextPath()%>/member/memberEnroll';"/>
 					</td>
 				</tr>
 			</table>
@@ -118,11 +118,14 @@ $(function(){
 			<td><%= memberLoggedIn.getMemberName() %>님, 안녕하세요.</td>
 		</tr>
 		<tr>
-			<td><input type="button" value="내 정보보기" />
+			<td><input 
+					type="button" 
+					value="내 정보보기" 
+					onclick="location.href='<%= request.getContextPath()%>/member/memberView?memberId=<%=memberLoggedIn.getMemberId()%>';"/>
 				<input 
 					type="button" 
 					value="로그아웃"
-					onclick="location.href='<%= request.getContextPath()%>/member/logout'"; />
+					onclick="location.href='<%= request.getContextPath()%>/member/logout';" />
 			</td>
 		</tr>
 	</table>
