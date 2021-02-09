@@ -28,7 +28,7 @@ public class MemberViewServlet extends HttpServlet {
 		
 		//2. 사용자입력값처리
 		String memberId = request.getParameter("memberId");
-		System.out.println("memberId@servlet = " + memberId);
+//		System.out.println("memberId@servlet = " + memberId);
 		
 		//3. 비지니스로직
 		Member member = memberService.selectOne(memberId);

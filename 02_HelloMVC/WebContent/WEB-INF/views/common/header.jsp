@@ -2,7 +2,10 @@
     pageEncoding="UTF-8"%>
 <%@page import="member.model.vo.Member"%>
 <%
-	String msg = (String)request.getAttribute("msg");
+	String msg = (String)session.getAttribute("msg");
+	//1회 사용 후 msg는 아래처럼 폐기한다.
+	if(msg != null) session.removeAttribute("msg");	
+
 // 	System.out.println("msg@header.jsp = " + msg);
 	String loc = (String) request.getAttribute("loc");
 // 	System.out.println("loc@header.jsp = " + loc);

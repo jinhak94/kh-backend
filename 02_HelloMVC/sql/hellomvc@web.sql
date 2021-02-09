@@ -41,4 +41,5 @@ values (
     'admin', '1234', '관리자', 'A', 'M', to_date('19801010','yyyymmdd'),
     'admin@naver.com', '01056785678', '서울시 관악구', '게임,독서', default);
 select * from member;
+desc member;
 commit;

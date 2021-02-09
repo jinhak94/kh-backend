@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import common.util.MvcUtils;
 import member.model.service.MemberService;
 import member.model.vo.Member;
 
@@ -32,7 +33,7 @@ public class MemberLoginServlet extends HttpServlet {
 		
 		//2. 사용자입력값 처리
 		String memberId = request.getParameter("memberId");
-		String password = request.getParameter("password");
+		String password = MvcUtils.getEncryptedPassword(request.getParameter("password"));
 		String saveId = request.getParameter("saveId");
 //		System.out.println("memberId@servlet = " + memberId);
 //		System.out.println("password@servlet = " + password);
@@ -61,7 +62,7 @@ public class MemberLoginServlet extends HttpServlet {
 			session.setAttribute("memberLoggedIn",  member);
 			
 			//세션관련메소드
-			System.out.println(session.getId()); //사용자가 가지고 있는 JSESSIONID
+//			System.out.println(session.getId()); //사용자가 가지고 있는 JSESSIONID
 //			System.out.println(new Date(session.getCreationTime()));	//생성시간
 //			System.out.println(new Date(session.getLastAccessedTime()));	//마지막 접속시간
 			
@@ -92,14 +93,17 @@ public class MemberLoginServlet extends HttpServlet {
 		}
 		//로그인 실패 : 아이디 존재X, 비번이 틀린 경우
 		else {
-			request.setAttribute("msg", "아이디 또는 비밀번호가 일치하지 않습니다.");
-			request.setAttribute("loc", request.getContextPath());
+			HttpSession session = request.getSession(true);
+			session.setAttribute("msg", "아이디 또는 비밀번호가 일치하지 않습니다.");
 
-			request.getRequestDispatcher("/index.jsp").forward(request, response);
+			//redirect 해주면 아래 부분은 필요 없다.
+//			request.setAttribute("loc", request.getContextPath());
+
+//			request.getRequestDispatcher("/index.jsp").forward(request, response);
+//			forward -> redirect로 개선
+//			아래와 같이 하면 클라이언트가 새로 요청하기 때문에,
+//			서버에서 response와 request가 새로 만들어진다.
+			response.sendRedirect(request.getContextPath());
 		}
-		
-		
-		
 	}
-
 }

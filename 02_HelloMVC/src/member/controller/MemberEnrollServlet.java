@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import common.util.MvcUtils;
 import member.model.service.MemberService;
 import member.model.vo.Member;
 
@@ -64,7 +65,7 @@ public class MemberEnrollServlet extends HttpServlet {
 		}
 		Member member = new Member();
 		member.setMemberId(request.getParameter("memberId"));
-		member.setPassword(request.getParameter("password"));
+		member.setPassword(MvcUtils.getEncryptedPassword(request.getParameter("password")));
 		member.setMemberName(request.getParameter("memberName"));
 		member.setGender(request.getParameter("gender"));
 		member.setBirthDay(birthDay);

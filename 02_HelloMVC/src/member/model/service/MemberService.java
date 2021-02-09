@@ -59,4 +59,15 @@ public class MemberService {
 		close(conn);
 		return chk;
 	}
+
+	public int updatePassword(String encryptedPassword, String memberId) {
+		Connection conn = getConnection();
+		int chk = memberDao.updatePassword(conn, encryptedPassword, memberId);
+		if(chk>0)
+			commit(conn);
+		else 
+			rollback(conn);
+		close(conn);
+		return chk;
+	}
 }

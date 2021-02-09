@@ -28,20 +28,20 @@
             return false;
         }
 
-        //3. 비밀번호 검사 : 4글자 이상 && (pwd.value == pwdCheck.value)
-        if(password_.value.length < 4){
-            alert("비밀번호는 4글자 이상이어야 합니다.");
-            password_.select();
-            return false;
-        }
+//         //3. 비밀번호 검사 : 4글자 이상 && (pwd.value == pwdCheck.value)
+//         if(password_.value.length < 4){
+//             alert("비밀번호는 4글자 이상이어야 합니다.");
+//             password_.select();
+//             return false;
+//         }
 
-        if(password_.value != password2.value){
-            alert("비밀번호가 일치하지 않습니다.");
-            password_.value = '';   
-            password2.value = '';
-            password_.focus();
-            return false;
-        }
+//         if(password_.value != password2.value){
+//             alert("비밀번호가 일치하지 않습니다.");
+//             password_.value = '';   
+//             password2.value = '';
+//             password_.focus();
+//             return false;
+//         }
         
         var $phone = $("#phone");
         //-제거하기
@@ -67,6 +67,10 @@
 		deleteFrm.submit();	
 	}
 
+	function updatePassword(){
+		location.href = "<%= request.getContextPath() %>/member/updatePassword?memberId=<%= member.getMemberId()%>"
+	}
+	
 </script>
 <section id=enroll-container>
 	<h2>회원 정보</h2>
@@ -78,18 +82,18 @@
 					<input type="text" name="memberId" id="memberId_" value="<%=member.getMemberId() %>" readonly>
 				</td>
 			</tr>
-			<tr>
-				<th>패스워드</th>
-				<td>
-					<input type="password" name="password" id="password_" value="<%=member.getPassword() %>" required>
-				</td>
-			</tr>
-			<tr>
-				<th>패스워드확인</th>
-				<td>	
-					<input type="password" id="password2" value=" <%=member.getPassword() %> " required><br>
-				</td>
-			</tr> 
+<!-- 			<tr> -->
+<!-- 				<th>패스워드</th> -->
+<!-- 				<td> -->
+<%-- 					<input type="password" name="password" id="password_" value="<%=member.getPassword() %>" required> --%>
+<!-- 				</td> -->
+<!-- 			</tr> -->
+<!-- 			<tr> -->
+<!-- 				<th>패스워드확인</th> -->
+<!-- 				<td>	 -->
+<%-- 					<input type="password" id="password2" value=" <%=member.getPassword() %> " required><br> --%>
+<!-- 				</td> -->
+<!-- 			</tr>  -->
 			<tr>
 				<th>이름</th>
 				<td>	
@@ -179,6 +183,7 @@
 		</table>
 		
         <input type="button" onclick="updateMember();" value="정보수정"/>
+        <input type="button" onclick="updatePassword();" value="비밀번호수정" />
         <input type="button" onclick="deleteMember();" value="탈퇴"/>
 	</form>
 </section>
