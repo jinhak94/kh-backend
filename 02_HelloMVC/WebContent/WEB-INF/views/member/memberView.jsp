@@ -60,7 +60,6 @@
 	}
 	
 	function deleteMember(){
-		console.log("hello");
 		var deleteFrm = document.querySelector("#memberUpdateFrm");
 		deleteFrm.method = "post";  
 		deleteFrm.action = "<%=request.getContextPath()%>/member/memberDelete?memberId=<%=member.getMemberId()%>";

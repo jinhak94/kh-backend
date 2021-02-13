@@ -13,7 +13,9 @@ import static common.JDBCTemplate.*;
  * 자원반납
  */
 public class MemberService {
-
+	public static final String ADMIN_MEMBER_ROLE = "A";
+	public static final String USER_MEMBER_ROLE = "U";
+	
 	private MemberDao memberDao = new MemberDao();
 
 	public Member selectOne(String memberId) {
@@ -70,4 +72,5 @@ public class MemberService {
 		close(conn);
 		return chk;
 	}
+
 }

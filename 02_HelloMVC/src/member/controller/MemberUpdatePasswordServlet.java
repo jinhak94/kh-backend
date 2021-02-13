@@ -35,17 +35,15 @@ public class MemberUpdatePasswordServlet extends HttpServlet {
 		//1. 입력한 비밀번호 값들을 가져오기
 		String password = MvcUtils.getEncryptedPassword(request.getParameter("password"));
 		String newPassword = MvcUtils.getEncryptedPassword(request.getParameter("newPassword"));
-		String passwordCheck = MvcUtils.getEncryptedPassword(request.getParameter("passwordCheck"));
-		System.out.println(password);
-		System.out.println(newPassword);
-		System.out.println(passwordCheck);
+//		System.out.println(password);
+//		System.out.println(newPassword);
 		
 		//2. 세션에 저장된 로그인 정보 가져오기
 		HttpSession session = request.getSession(true);
 		Member member = (Member)session.getAttribute("memberLoggedIn");
 
 		//3. 입력한 비밀번호가 로그인된 유저의 비밀번호와 일치하는 경우
-		if(password == null || newPassword == null || passwordCheck == null ||
+		if(password == null || newPassword == null ||
 				member == null) {
 			session.setAttribute("msg", "회원 오류.");
 			response.sendRedirect(request.getContextPath());
@@ -58,7 +56,7 @@ public class MemberUpdatePasswordServlet extends HttpServlet {
 //		else if(!newPassword.equals(passwordCheck)) {
 //			// 새 비밀번호와 비밀번호 체크가 일치하지 않는 경우 메세지 출력
 //			session.setAttribute("msg", "비밀번호가 일치하지 않습니다.");
-//			response.sendRedirect(request.getContextPath() + "/member/updatePassword");
+//			<response class="sendRedire"></response>ct(request.getContextPath() + "/member/updatePassword");
 //		}
 		else{
 		// 비밀번호가 일치. 비밀번호 변경 성공 메세지 출력 및 index 페이지로 이동

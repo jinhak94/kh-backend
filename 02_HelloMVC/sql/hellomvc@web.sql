@@ -42,4 +42,6 @@ values (
     'admin@naver.com', '01056785678', '서울시 관악구', '게임,독서', default);
 select * from member;
 desc member;
+
+update member set password = '1ARVn2Auq2/WAqx2gNrL+q3RNjAzXpUfCXrzkA6d4Xa22yhRLy4AC50E+6UTPoscbo31nbOoq51gvkuXzJ6B2w==';
 commit;

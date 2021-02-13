@@ -27,7 +27,7 @@ public class CheckIdDuplicateServlet extends HttpServlet {
 		
 		//2. 사용자 입력값
 		String memberId = request.getParameter("memberId");
-		System.out.println("memberId@servlet = " + memberId);
+//		System.out.println("memberId@servlet = " + memberId);
 		
 		//3. 비지니스 로직 : db를 통해 중복값 체크
 		Member member = memberService.selectOne(memberId);
