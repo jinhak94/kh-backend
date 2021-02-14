@@ -18,7 +18,7 @@ import member.model.vo.Member;
 /**
  * Servlet Filter implementation class AdminAuthFilter
  */
-@WebFilter("/admin/memberList")
+@WebFilter("/admin/*")
 public class AdminAuthFilter implements Filter {
 
     /**
