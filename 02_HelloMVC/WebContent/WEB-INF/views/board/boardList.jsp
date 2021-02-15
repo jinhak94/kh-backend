@@ -34,7 +34,7 @@
 				<td><%= b.getBoardTitle()%></td>
 				<td><%= b.getBoardWriter()%></td>
 				<td><%= b.getBoardDate()%></td>
-				<td><%= b.getBoardOriginalFileName() != null ? "<img src='/images/file.png'>" : ""%></td>
+				<td><%= b.getBoardRenamedFileName() != null ? "<img src='/images/file.png'>" : ""%></td>
 				<td><%= b.getBoardReadCount()%></td>
 			</tr>
 		<%} 
