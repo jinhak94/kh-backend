@@ -10,10 +10,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import admin.model.service.AdminService;
+import common.util.MvcUtils;
 import member.model.vo.Member;
 
 /**
- * Servlet implementation class AdminMemberListServlet
+ * 페이징 처리
+ * 1. 컨텐츠영역
+ * 2. 페이지바영역
+ * 
+ * 페이징 공식
+ * 1. 시작게시물 no ~ 마지막게시물 no
+ * 2. 전체 페이지수 구하기
+ * 3. 페이지바 시작no
  */
 @WebServlet("/admin/memberList")
 public class AdminMemberListServlet extends HttpServlet {
@@ -24,14 +32,29 @@ public class AdminMemberListServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//1. 사용자입력값     -  따로 없음
+		//1. 사용자입력값
+		int cpage = 1;
+		try {
+			cpage = Integer.parseInt(request.getParameter("cpage"));			
+		}catch(NumberFormatException e) {
+			//예외가 발생한 경우, cpage 값은 1로 유지한다.
+		}
+		int numPerPage = 10;
+		
 		
 		//2. 업무로직
-		List<Member> list = adminService.selectList(); //회원가입일 내림차순
-		System.out.println(list);
+		List<Member> list = adminService.selectList(cpage, numPerPage); //회원가입일 내림차순
+//		System.out.println(list);
+		
+		//페이지바처리
+		int totalContents = adminService.selectTotalMembers();
+//		System.out.println("totalContents@servlet = " + totalContents);
+		String url = request.getRequestURI();
+		String pageBar = MvcUtils.getPageBar(totalContents, cpage, numPerPage, url);
 		
 		//3. view단 처리 : forwarding
 		request.setAttribute("list", list);
+		request.setAttribute("pageBar", pageBar);
 		request.getRequestDispatcher("/WEB-INF/views/admin/memberList.jsp")
 		       .forward(request, response);
 		//4. 

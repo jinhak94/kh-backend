@@ -45,7 +45,7 @@ public class AdminAuthFilter implements Filter {
 		
 		//다른 사용자 정보로 접근하는 경우
 //		System.out.println("1 : " + memberLoggedIn.getMemberId());
-		String UriId = httpReq.getParameter("memberId");
+//		String UriId = httpReq.getParameter("memberId");
 //		System.out.println("2 : " + UriId);
 		
 		if(memberLoggedIn == null || !memberLoggedIn.getMemberRole().equals(MemberService.ADMIN_MEMBER_ROLE)) {
@@ -54,7 +54,6 @@ public class AdminAuthFilter implements Filter {
 			httpResp.sendRedirect(httpReq.getContextPath());
 			return;
 		}
-
 
 		// pass the request along the filter chain
 		chain.doFilter(request, response);

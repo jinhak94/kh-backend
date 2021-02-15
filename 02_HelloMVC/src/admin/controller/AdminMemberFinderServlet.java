@@ -1,7 +1,9 @@
 package admin.controller;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import admin.model.service.AdminService;
+import common.util.MvcUtils;
 import member.model.vo.Member;
 
 /**
@@ -29,18 +32,35 @@ public class AdminMemberFinderServlet extends HttpServlet {
 		String searchKeyword = request.getParameter("searchKeyword");
 		if(searchType.equals("memberId")) searchType = "member_id";
 		if(searchType.equals("memberName")) searchType = "member_name";		
+		int numPerPage = 10;
+		int cpage = 1;
+		try{
+			cpage = Integer.parseInt(request.getParameter("cpage"));
+		}catch(NumberFormatException e) {
+			
+		}
+		//사용자 입력값을 Map으로 처리
+		Map<String, Object> param = new HashMap<>();
+		param.put("searchType", searchType);
+		param.put("searchKeyword", searchKeyword);
+		param.put("cpage", cpage);
+		param.put("numPerPage", numPerPage);
+		
 		System.out.println("servlet," + searchType + searchKeyword);
 		//2. 업무로직 : 검색
-		List<Member> list = adminService.selectMemberBy(searchType, searchKeyword);
+		List<Member> list = adminService.selectMembersBy(param);
+		int totalContents = adminService.selectTotalMembersBy(param);
+		System.out.println("finder : " + totalContents);
+		//	/mvc/admin/memberFinder
+		String url = request.getRequestURI() + "?searchType=" + searchType + "&searchKeyword" + searchKeyword;
+		
+		String pageBar = MvcUtils.getPageBar(totalContents, cpage, numPerPage, url);
 		
 		//3. view단 처리 - 동일하게 /WEB-INF/views/admin/memberList.jsp
 		//(동일한 jsp로 forwarding 처리)
 		request.setAttribute("list", list);
+		request.setAttribute("pageBar", pageBar);
 		request.getRequestDispatcher("/WEB-INF/views/admin/memberList.jsp")
 				.forward(request, response);
-		
-		//4. 
-		
-	
 	}
 }
