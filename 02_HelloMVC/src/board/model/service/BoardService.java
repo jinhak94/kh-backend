@@ -1,7 +1,9 @@
 package board.model.service;
 
 import static common.JDBCTemplate.close;
+import static common.JDBCTemplate.commit;
 import static common.JDBCTemplate.getConnection;
+import static common.JDBCTemplate.rollback;
 
 import java.sql.Connection;
 import java.util.List;
@@ -29,6 +31,57 @@ public class BoardService {
 		int totalContents = boardDao.selectTotalBoards(conn);
 		close(conn);
 		return totalContents;
+	}
+
+	public int insertBoard(Board board) {
+		Connection conn = getConnection();
+		int chk = boardDao.insertBoard(conn, board);
+		if(chk>0) {
+			int boardNo = boardDao.selectLastBoardNo(conn);
+			//board의 주소값을 넘긴 것이기 때문에, 
+			//service과 servlet에서 사용하는 객체는 같은 객체.
+			//service에서 바꿔도, servlet에서 사용 가능.
+			board.setBoardNo(boardNo);
+			commit(conn);
+		}
+		else 
+			rollback(conn);
+		close(conn);
+		return chk;
+	}
+
+	public Board selectOne(int boardNo) {
+		Connection conn = getConnection();
+		Board board = boardDao.selectOne(conn, boardNo);
+		close(conn);
+		return board;
+	}
+
+	public int updateBoardReadCount(int boardNo) {
+		Connection conn = getConnection();
+		int result = boardDao.updateBoardReadCount(conn, boardNo);
+		if(result>0) commit(conn);
+		else rollback(conn);
+		close(conn);
+		return result;
+	}
+
+	public int deleteBoard(int boardNo) {
+		Connection conn = getConnection();
+		int result = boardDao.deleteBoard(conn, boardNo);
+		if(result>0) commit(conn);
+		else rollback(conn);
+		close(conn);
+		return result;
+	}
+
+	public int updateBoard(Board board) {
+		Connection conn = getConnection();
+		int result = boardDao.updateBoard(conn, board);
+		if(result>0) commit(conn);
+		else rollback(conn);
+		close(conn);
+		return result;
 	}
 	
 }

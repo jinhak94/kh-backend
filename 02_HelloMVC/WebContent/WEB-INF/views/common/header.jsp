@@ -110,6 +110,7 @@ $(function(){
 							type="button" 
 							value="회원가입"
 							onclick="location.href='<%= request.getContextPath()%>/member/memberEnroll';"/>
+
 					</td>
 				</tr>
 			</table>

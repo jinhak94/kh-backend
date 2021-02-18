@@ -14,7 +14,7 @@
     div#search-memberId {display: <%= "memberId".equals(searchType) || searchType == null ? "inline-block" : "none" %>;}
     div#search-memberName{display: <%= "memberName".equals(searchType) ? "inline-block" : "none" %>;}
     div#search-gender{display: <%= "gender".equals(searchType) ? "inline-block" : "none" %>;}
-</style>
+ </style>
 <script>
 $(function(){
 	

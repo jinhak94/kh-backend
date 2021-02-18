@@ -33,7 +33,7 @@ public class JDBCTemplate {
 			String path = JDBCTemplate.class.getResource(fileName).getPath();
 			//getPath()는 절대경로, /C:/로 시작하는 경로로 만들어줌.
 			prop.load(new FileReader(path));
-			System.out.println("path@JDBCTemplate = " + path);
+//			System.out.println("path@JDBCTemplate = " + path);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

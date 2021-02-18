@@ -80,4 +80,12 @@ public class Board {
 	public void setBoardReadCount(int boardReadCount) {
 		this.boardReadCount = boardReadCount;
 	}
+	@Override
+	public String toString() {
+		return "Board [boardNo=" + boardNo + ", boardTitle=" + boardTitle + ", boardWriter=" + boardWriter
+				+ ", boardContent=" + boardContent + ", boardOriginalFileName=" + boardOriginalFileName
+				+ ", boardRenamedFileName=" + boardRenamedFileName + ", boardDate=" + boardDate + ", boardReadCount="
+				+ boardReadCount + "]";
+	}
+	
 }

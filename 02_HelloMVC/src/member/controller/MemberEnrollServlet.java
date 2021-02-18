@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import common.util.MvcUtils;
 import member.model.service.MemberService;
@@ -74,12 +75,13 @@ public class MemberEnrollServlet extends HttpServlet {
 		member.setAddress(address);
 		member.setHobby(hobby);		
 		member.setEnrollDate(null);
-				
+		HttpSession session = request.getSession();
+		
 		int enrollChk = memberService.insertMember(member);
 		if(enrollChk != 0) {
-			request.setAttribute("msg", "회원가입에 성공하셨습니다.");
+			session.setAttribute("msg", "회원가입에 성공하셨습니다.");
 		}else {
-			request.setAttribute("msg", "회원가입에 실패하셨습니다..");
+			session.setAttribute("msg", "회원가입에 실패하셨습니다..");
 		}
 		//DML, login 등 요청후 반드시 url을 변경해서 새로고침 사고를 방지한다.
 		request.setAttribute("loc", request.getContextPath());

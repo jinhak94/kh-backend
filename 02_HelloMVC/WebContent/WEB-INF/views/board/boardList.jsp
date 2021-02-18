@@ -9,6 +9,12 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/board.css" />
 <section id="board-container">
 	<h2>게시판 </h2>
+   <%if(memberLoggedIn != null){ %>
+   		<input id="btn-add" 
+   		type="button" 
+   		value="글쓰기" 
+   		onclick="location.href='<%=request.getContextPath()%>/board/boardEnroll';"/>
+   <%} %>
 	<table id="tbl-board">
 		<thead>
 			<tr>
@@ -31,10 +37,14 @@
 			for(Board b : list){%>
 			<tr>
 				<td><%= b.getBoardNo()%></td>
-				<td><%= b.getBoardTitle()%></td>
+				<td><a href="<%=request.getContextPath()%>/board/boardView?boardNo=<%=b.getBoardNo()%>"><%= b.getBoardTitle()%></a></td>
 				<td><%= b.getBoardWriter()%></td>
 				<td><%= b.getBoardDate()%></td>
-				<td><%= b.getBoardRenamedFileName() != null ? "<img src='/images/file.png'>" : ""%></td>
+				<td><% if(b.getBoardOriginalFileName() != null){ %>
+				<img alt="첨부파일" 
+					 src="<%=request.getContextPath() %>/images/file.png" width="16px">
+						<% }%>
+				</td>
 				<td><%= b.getBoardReadCount()%></td>
 			</tr>
 		<%} 

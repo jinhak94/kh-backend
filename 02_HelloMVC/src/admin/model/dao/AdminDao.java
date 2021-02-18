@@ -245,7 +245,6 @@ public class AdminDao {
 			if(rset.next()) {
 				totalContents = rset.getInt(1); //컬럼순서로 가져옴.
 			}
-			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
