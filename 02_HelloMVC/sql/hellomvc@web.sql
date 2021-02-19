@@ -307,3 +307,172 @@ commit;
 desc board;
 select * from member;
 select * from board;
+
+---------------------------------------------------------
+-- 댓글기능 구현
+---------------------------------------------------------
+-- 게시판(board) ---- fk ---> 게시판댓글테이블(board_comment) : 댓글/답글
+-- 댓글은 특정 게시글(fk)을 참조
+-- 답글은 특정 게시글(fk)과 특정 댓글(fk)을 참조
+
+select * from board_comment where board_ref = 270;
+
+create table board_comment (
+    board_comment_no number,                    -- pk 고유번호
+    board_comment_level number default 1,   -- 댓글 1, 대댓글 2
+    board_comment_writer varchar2(15),          -- member.member_id fk
+    board_comment_content varchar2(2000),   
+    board_ref number,                                   -- board.board_no fk
+    board_comment_ref number,                     -- board_comment.board_comment_no  댓글 null, 대댓글때만 사용
+    board_comment_date date default sysdate,
+    constraint pk_board_comment_no primary key(board_comment_no),
+    constraint fk_board_comment_writer foreign key(board_comment_writer)
+                                                       references member(member_id)
+                                                       on delete set null,
+    constraint fk_board_ref foreign key (board_ref)
+                                     references board(board_no)
+                                     on delete cascade,
+    constraint fk_board_comment_ref foreign key (board_comment_ref)
+                                                   references board_comment (board_comment_no)
+                                                   on delete cascade
+);
+--drop table board_comment;
+comment on table board_comment is '게시판댓글테이블';
+comment on column board_comment.board_comment_no is '게시판댓글번호';
+comment on column board_comment.board_comment_level is '게시판댓글 레벨: 1-댓글(기본값), 2-대댓글';
+comment on column board_comment.board_comment_writer is '게시판댓글 작성자';
+comment on column board_comment.board_comment_content is '게시판댓글';
+comment on column board_comment.board_ref is '참조원글번호';
+comment on column board_comment.board_comment_ref is '게시판댓글 참조번호';
+comment on column board_comment.board_comment_date is '게시판댓글 작성일';
+--시퀀스 생성
+create sequence seq_board_comment_no
+start with 1
+increment by 1
+nominvalue
+nomaxvalue
+nocycle
+nocache;
+
+-- 게시글 - 댓글 - 답글
+select *
+from board
+order by board_no desc;
+
+-- 270번
+insert into board_comment
+values(
+    seq_board_comment_no.nextval,
+    default, --level
+    'admin', --작성자
+    '수고하셨습니다.',
+    270, --게시글 번호
+    null,
+    default --작성일
+);
+
+insert into board_comment
+values(
+    seq_board_comment_no.nextval,
+    default, --level
+    'abcd', --작성자
+    '잉잉',
+    270, --게시글 번호
+    null,
+    default --작성일
+);
+
+insert into board_comment
+values(
+    seq_board_comment_no.nextval,
+    default, --level
+    'honggd', --작성자
+    '바이오리듬허 잘 좀 허자.',
+    270, --게시글 번호
+    null,
+    default --작성일
+);
+
+insert into board_comment
+values(
+    seq_board_comment_no.nextval,
+    default, --level
+    'admin', --작성자
+    '항항',
+    270, --게시글 번호
+    null,
+    default --작성일
+);
+select * from board_comment;
+
+--270번 게시글 5번 댓글에 대한 대댓글(답글)
+insert into board_comment
+values(
+    seq_board_comment_no.nextval,
+    2, --level
+    'wxyz', --작성자
+    '수고하셨습니다.',
+    270, --게시글 번호
+    5, --참조하는 댓글 번호
+    default --작성일
+);
+
+insert into board_comment
+values(
+    seq_board_comment_no.nextval,
+    2, --level
+    'wxyz', --작성자
+    '박소연 카트 허접',
+    270, --게시글 번호
+    5, --참조하는 댓글 번호
+    default --작성일
+);
+
+insert into board_comment
+values(
+    seq_board_comment_no.nextval,
+    2, --level
+    'bear', --작성자
+    '읽어주셔서 감사합니다.',
+    270, --게시글 번호
+    6, --참조하는 댓글 번호
+    default --작성일
+);
+
+select * from board_comment;
+
+--계층형 쿼리
+--행과 행간의 부모자식 맺어서 결과 집합을 리턴하는 쿼리
+
+--start with : 부모행의 조건
+--connect by : 부모행(부모컬럼 앞에 prior 키워드 작성)과 자식행의 관계를 작성하는 조건절
+desc board_comment;
+
+--계층형 쿼리에서 지원하는 level이 있다.
+select  lpad(' ', (level - 1) * 5) || board_comment_content,
+        level,
+        BC.*
+from board_comment BC
+where board_ref = 270
+start with board_comment_level = 1 -- 댓글
+connect by board_comment_ref = prior board_comment_no
+order siblings by board_comment_no desc, board_comment_no asc;
+
+commit;
+
+--계층형 쿼리
+--employee 테이블 조직도를 조회
+--manager_id ---> emp_id
+--부모행은 n행 이상일 수 있다.
+select * from employee;
+--계층형 쿼리 연습
+select  lpad(' ', (level - 1) * 5) || emp_name 조직도,
+        level,
+        EM.*
+from employee EM
+where quit_yn = 'N'
+start with job_code = 'J1'
+--start with manager_id is null -- 댓글
+connect by prior emp_id = manager_id;
+
+select * from board_comment where board_ref = 270 order by board_comment_no desc, board_comment_no asc;

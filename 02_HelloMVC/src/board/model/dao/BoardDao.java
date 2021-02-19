@@ -5,6 +5,7 @@ import static common.JDBCTemplate.close;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,6 +16,7 @@ import java.util.Properties;
 
 import board.model.exception.BoardException;
 import board.model.vo.Board;
+import board.model.vo.BoardComment;
 
 public class BoardDao {
 	
@@ -262,5 +264,91 @@ public class BoardDao {
 			close(pstmt);
 		}
 		return result;
+	}
+
+	public int insertBoardComment(Connection conn, BoardComment bc) {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String sql = prop.getProperty("insertBoardComment");
+		//insert into board_comment values(seq_board_comment_no.nextval, ?, ?, ?, ?, ?, default)
+		
+		try {
+			//1.PreparedStatement객체생성(미완성쿼리 값대입)
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, bc.getBoardCommentLevel());
+			pstmt.setString(2, bc.getBoardCommentWriter());
+			pstmt.setString(3, bc.getBoardCommentContent());
+			pstmt.setInt(4, bc.getBoardRef());
+			//아래와 같이 하면 안된다. db에서는 number 컬럼에 null도 올 수 있음
+			//하지만 자바에서는 int에 null 올 수 없고, Integer에 와야 한다.
+//			pstmt.setInt(5,  bc.getBoardCommentRef() != 0 ? bc.getBoardCommentRef() : null); //댓글인 경우 0번 댓글을 참조
+			pstmt.setObject(5, bc.getBoardCommentRef() != 0 ? bc.getBoardCommentRef() : null);
+			result = pstmt.executeUpdate();			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			//3.자원반납(ResultSet, PreparedStatement)
+			close(rset);
+			close(pstmt);
+		}
+		return result;
+	}
+
+	public List<BoardComment> selectBoardCommentList(Connection conn, int boardNo) {
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = prop.getProperty("selectBoardCommentList");
+		//select * from board_comment where board_ref = ?
+		
+		List<BoardComment> list = new ArrayList<BoardComment>();
+		BoardComment bc = null;
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, boardNo);
+		/*
+			   private int boardCommentNo;
+			   private int boardCommentLevel;
+			   private String boardCommentWriter;
+			   private String boardCommentContent;
+			   private int boardRef;
+			   private int boardCommentRef;
+			   private Date boardCommentDate;
+			*/
+			/*
+			 *     board_comment_no number,                    -- pk 고유번호
+    				board_comment_level number default 1,   -- 댓글 1, 대댓글 2
+    				board_comment_writer varchar2(15),          -- member.member_id fk
+    				board_comment_content varchar2(2000),   
+    				board_ref number,                                   -- board.board_no fk
+    				board_comment_ref number,                     -- board_comment.board_comment_no  댓글 null, 대댓글때만 사용
+    				board_comment_date date default sysdate,
+			 */
+			rset = pstmt.executeQuery();
+			while(rset.next()) {
+				bc = new BoardComment();
+				bc.setBoardCommentNo(rset.getInt("board_comment_no"));
+				bc.setBoardCommentLevel(rset.getInt("board_comment_level"));
+				bc.setBoardCommentWriter(rset.getString("board_comment_writer"));
+				bc.setBoardCommentContent(rset.getString("board_comment_content"));
+				bc.setBoardRef(rset.getInt("board_ref"));
+				bc.setBoardCommentRef(rset.getInt("board_comment_ref"));
+				bc.setBoardCommentDate(rset.getDate("board_comment_date"));
+				
+				list.add(bc);
+			}
+			
+		} catch (Exception e) {
+//			e.printStackTrace();
+			//런타임예외로 전환해서 다시 던지기
+			throw new RuntimeException("게시물 조회 오류 ", e);
+		} finally {
+			//3.자원반납(ResultSet, PreparedStatement)
+			close(rset);
+			close(pstmt);
+		}
+
+		return list;
 	}
 }

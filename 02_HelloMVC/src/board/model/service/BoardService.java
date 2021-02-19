@@ -11,6 +11,7 @@ import java.util.Map;
 
 import board.model.dao.BoardDao;
 import board.model.vo.Board;
+import board.model.vo.BoardComment;
 
 public class BoardService {
 	private BoardDao boardDao = new BoardDao();
@@ -82,6 +83,26 @@ public class BoardService {
 		else rollback(conn);
 		close(conn);
 		return result;
+	}
+
+	public int insertBoardComment(BoardComment bc) {
+		Connection conn = getConnection();
+		int result = boardDao.insertBoardComment(conn, bc);
+		if(result>0) commit(conn);
+		else rollback(conn);
+		close(conn);
+		return result;
+	}
+
+	public List<BoardComment> selectBoardCommentList(int boardNo) {
+		//1.Connection객체 생성
+		Connection conn = getConnection();
+		//2.dao요청
+		List<BoardComment> list = boardDao.selectBoardCommentList(conn, boardNo);
+		//3.트랜잭션관리(DML만)
+		//4.자원반납
+		close(conn);
+		return list;
 	}
 	
 }
