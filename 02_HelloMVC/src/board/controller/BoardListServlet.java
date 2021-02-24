@@ -39,7 +39,7 @@ public class BoardListServlet extends HttpServlet {
 			param.put("numPerPage", numPerPage);
 			
 			//2. 업무로직 : 각 페이지에 해당하는 게시글 가져오기
-			List<Board> list = boardService.selectBoard(param);
+			List<Board> list = boardService.selectBoardList(param);
 			//totalContents 총게시물수
 			int totalContents = boardService.selectTotalBoards(param);
 //			System.out.println("BoardListServlet@ = " + totalContents);

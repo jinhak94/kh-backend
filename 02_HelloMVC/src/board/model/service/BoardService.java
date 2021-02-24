@@ -16,11 +16,11 @@ import board.model.vo.BoardComment;
 public class BoardService {
 	private BoardDao boardDao = new BoardDao();
 
-	public List<Board> selectBoard(Map<String, Object> param) {
+	public List<Board> selectBoardList(Map<String, Object> param) {
 		//1.Connection객체 생성
 		Connection conn = getConnection();
 		//2.dao요청
-		List<Board> list = boardDao.selectBoard(conn, param);
+		List<Board> list = boardDao.selectBoardList(conn, param);
 		//3.트랜잭션관리(DML만)
 		//4.자원반납
 		close(conn);
@@ -104,5 +104,13 @@ public class BoardService {
 		close(conn);
 		return list;
 	}
-	
+
+	public int boardCommentDelete(int boardCommentNo) {
+		Connection conn = getConnection();
+		int result = boardDao.boardCommentDelete(conn, boardCommentNo);
+		if(result>0) commit(conn);
+		else rollback(conn);
+		close(conn);
+		return result;
+	}
 }

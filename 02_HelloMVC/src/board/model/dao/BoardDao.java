@@ -5,7 +5,6 @@ import static common.JDBCTemplate.close;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,6 +16,7 @@ import java.util.Properties;
 import board.model.exception.BoardException;
 import board.model.vo.Board;
 import board.model.vo.BoardComment;
+import board.model.vo.BoardExt;
 
 public class BoardDao {
 	
@@ -33,14 +33,45 @@ public class BoardDao {
 			e.printStackTrace();
 		}
 	}
-
-	public List<Board> selectBoard(Connection conn, Map<String, Object> param) {
+	
+	public int selectBoardComment(Connection conn, int no) {
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = prop.getProperty("selectBoard");
+		String query = prop.getProperty("selectBoardComment");
+
+		int result = 0;
+		//select count(*) from board_comment where board_ref = ?
+		
+		try {
+			//1.PreparedStatement객체생성(미완성쿼리 값대입)
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, no); //시작 rnum
+
+			//2.Statement실행 및 결과처리:ResultSet -> Member
+			rset = pstmt.executeQuery();
+			if(rset.next()){
+				result = rset.getInt(1);	
+			}
+		} catch (Exception e) {
+//			e.printStackTrace();
+			//런타임예외로 전환해서 다시 던지기
+			throw new RuntimeException("게시물 조회 오류 ", e);
+		} finally {
+			//3.자원반납(ResultSet, PreparedStatement)
+			close(rset);
+			close(pstmt);
+		}
+
+		return result;
+	}
+
+	public List<Board> selectBoardList(Connection conn, Map<String, Object> param) {
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = prop.getProperty("selectBoardList");
 
 		List<Board> list = new ArrayList<Board>();
-		Board board = null;
+		BoardExt be = null;
 		// select * 
 		// from
 			//( select M.*, row_number() 
@@ -60,16 +91,20 @@ public class BoardDao {
 			//2.Statement실행 및 결과처리:ResultSet -> Member
 			rset = pstmt.executeQuery();
 			while(rset.next()) {
-				board = new Board();
-				board.setBoardNo(rset.getInt("board_no"));
-				board.setBoardTitle(rset.getString("board_title"));
-				board.setBoardWriter(rset.getString("board_writer"));
-				board.setBoardContent(rset.getString("board_content"));
-				board.setBoardOriginalFileName(rset.getString("board_original_filename"));
-				board.setBoardRenamedFileName(rset.getString("board_renamed_filename"));
-				board.setBoardDate(rset.getDate("board_date"));
-				board.setBoardReadCount(rset.getInt("board_read_count"));
-				list.add(board);
+				be = new BoardExt();
+				be.setBoardNo(rset.getInt("board_no"));
+				be.setBoardTitle(rset.getString("board_title"));
+				be.setBoardWriter(rset.getString("board_writer"));
+				be.setBoardContent(rset.getString("board_content"));
+				be.setBoardOriginalFileName(rset.getString("board_original_filename"));
+				be.setBoardRenamedFileName(rset.getString("board_renamed_filename"));
+				be.setBoardDate(rset.getDate("board_date"));
+				be.setBoardReadCount(rset.getInt("board_read_count"));
+				int count = selectBoardComment(conn, rset.getInt("board_no"));
+				be.setBoardCommentCount(count);
+				//게시글별 댓글의 수를 가져와서 VO 객체에 담기 : commentCnt 필드 추가
+				
+				list.add(be);
 			}
 			
 		} catch (Exception e) {
@@ -350,5 +385,27 @@ public class BoardDao {
 		}
 
 		return list;
+	}
+
+	public int boardCommentDelete(Connection conn, int boardCommentNo) {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String sql = prop.getProperty("boardCommentDelete");
+		//delete from board_comment where board_comment_no = ?
+		
+		try {
+			//1.PreparedStatement객체생성(미완성쿼리 값대입)
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, boardCommentNo);
+			result = pstmt.executeUpdate();			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			//3.자원반납(ResultSet, PreparedStatement)
+			close(rset);
+			close(pstmt);
+		}
+		return result;
 	}
 }

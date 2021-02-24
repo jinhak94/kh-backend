@@ -1,3 +1,4 @@
+<%@page import="board.model.vo.BoardExt"%>
 <%@page import="board.model.vo.Board"%>
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -37,7 +38,7 @@
 			for(Board b : list){%>
 			<tr>
 				<td><%= b.getBoardNo()%></td>
-				<td><a href="<%=request.getContextPath()%>/board/boardView?boardNo=<%=b.getBoardNo()%>"><%= b.getBoardTitle()%></a></td>
+				<td><a href="<%=request.getContextPath()%>/board/boardView?boardNo=<%=b.getBoardNo()%>"><%= b.getBoardTitle() + (((BoardExt)b).getBoardCommentCount() > 0? "(" + ((BoardExt)b).getBoardCommentCount() + ")" : "") %></a></td>
 				<td><%= b.getBoardWriter()%></td>
 				<td><%= b.getBoardDate()%></td>
 				<td><% if(b.getBoardOriginalFileName() != null){ %>

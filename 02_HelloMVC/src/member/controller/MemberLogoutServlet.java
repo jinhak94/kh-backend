@@ -24,10 +24,10 @@ public class MemberLogoutServlet extends HttpServlet {
 		//false 옵션 -> 해당하는 세션이 없을 때 새로 만들지 말라고 null 리턴
 		if(session != null)
 			session.invalidate();
-		
-		//인덱스페이지 재요청하는 리다이렉트 처리
-		response.sendRedirect(request.getContextPath());
-		
-	}
+		String location = request.getHeader("Referer");
 
+		//인덱스페이지 재요청하는 리다이렉트 처리
+//		response.sendRedirect(request.getContextPath());
+		response.sendRedirect(location);
+	}
 }

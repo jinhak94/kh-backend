@@ -47,6 +47,9 @@ public class MemberLoginServlet extends HttpServlet {
 		// - c. member객체가 존재하지 않을 경우 : 아이디오류
 		Member member = memberService.selectOne(memberId);
 //		System.out.println("member@servlet = " + member);
+
+		//request의 Referrer 찾아줌
+		String location = request.getHeader("Referer");
 		
 		//로그인 성공
 		if(member != null && password.equals(member.getPassword())) {
@@ -89,7 +92,9 @@ public class MemberLoginServlet extends HttpServlet {
 			//4. view단 처리 (jsp). 
 			// redirection처리 : 요청 url을 변경
 			// 주어진 주소(location)로 클라이언트에게 다시 요청하라는 응답.
-			response.sendRedirect(request.getContextPath());
+
+			System.out.println("location@MemberLoginServlet = " + location);
+			response.sendRedirect(location);
 		}
 		//로그인 실패 : 아이디 존재X, 비번이 틀린 경우
 		else {
@@ -103,7 +108,7 @@ public class MemberLoginServlet extends HttpServlet {
 //			forward -> redirect로 개선
 //			아래와 같이 하면 클라이언트가 새로 요청하기 때문에,
 //			서버에서 response와 request가 새로 만들어진다.
-			response.sendRedirect(request.getContextPath());
+			response.sendRedirect(location);
 		}
 	}
 }

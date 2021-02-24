@@ -323,7 +323,7 @@ create table board_comment (
     board_comment_writer varchar2(15),          -- member.member_id fk
     board_comment_content varchar2(2000),   
     board_ref number,                                   -- board.board_no fk
-    board_comment_ref number,                     -- board_comment.board_comment_no  댓글 null, 대댓글때만 사용
+        board_comment_ref number,                     -- board_comment.board_comment_no  댓글 null, 대댓글때만 사용
     board_comment_date date default sysdate,
     constraint pk_board_comment_no primary key(board_comment_no),
     constraint fk_board_comment_writer foreign key(board_comment_writer)
