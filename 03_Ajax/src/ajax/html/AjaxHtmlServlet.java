@@ -23,7 +23,7 @@ public class AjaxHtmlServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+	
 		//1. 업무로직
 		//Singleton(프로그램 상에서 단 하나의 객체만 생성해서 관리하는 것)
 		//			객체를 사용해서 메모리 상에서만 관리
