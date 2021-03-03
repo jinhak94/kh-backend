@@ -19,7 +19,6 @@ import member.model.vo.Member;
 public class AjaxHtmlServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
