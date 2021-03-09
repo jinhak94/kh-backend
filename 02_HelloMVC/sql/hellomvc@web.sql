@@ -476,3 +476,7 @@ start with job_code = 'J1'
 connect by prior emp_id = manager_id;
 
 select * from board_comment where board_ref = 270 order by board_comment_no desc, board_comment_no asc;
+
+
+select * from( select row_number() over(order by board_no desc) rnum, b.*, (select count(*) from board_comment where board_ref = b.board_no) board_comment_count from board b) v where rnum between 6 and 10;
+

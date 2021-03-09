@@ -12,7 +12,7 @@
  <style>
     div#search-container {margin:0 0 10px 0; padding:3px; background-color: rgba(0, 188, 212, 0.3);}
     div#search-memberId {display: <%= "memberId".equals(searchType) || searchType == null ? "inline-block" : "none" %>;}
-    div#search-memberName{display: <%= "memberName".equals(searchType) ? "inline-block" : "none" %>;}
+	    div#search-memberName{display: <%= "memberName".equals(searchType) ? "inline-block" : "none" %>;}
     div#search-gender{display: <%= "gender".equals(searchType) ? "inline-block" : "none" %>;}
  </style>
 <script>
