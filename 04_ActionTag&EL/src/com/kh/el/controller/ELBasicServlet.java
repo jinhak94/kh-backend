@@ -21,7 +21,7 @@ import com.kh.person.model.vo.Person;
 @WebServlet("/el/basic.do")
 public class ELBasicServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
+  
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
