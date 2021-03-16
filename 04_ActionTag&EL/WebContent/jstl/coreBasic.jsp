@@ -48,17 +48,55 @@
 	</c:if>
 
 	<hr />
-	<c:if test="${Integer.parseInt(param.no1) > Integer.parseInt(param.no2)}">
-		${param.no1}이 ${param.no2}보다 큽니다.
-	</c:if>
-	<c:if test="${Integer.parseInt(param.no1) < Integer.parseInt(param.no2)}">
-		${param.no1}이 ${param.no2}보다 작습니다.
-	</c:if>
-	<c:if test="${Integer.parseInt(param.no1) = Integer.parseInt(param.no2)}">
-		${param.no1}이 ${param.no2}와 같습니다.
-	</c:if>
+<%-- 	<c:if test="${Integer.parseInt(param.no1) > Integer.parseInt(param.no2)}"> --%>
+<%-- 		${param.no1}이 ${param.no2}보다 큽니다. --%>
+<%-- 	</c:if> --%>
+<%-- 	<c:if test="${Integer.parseInt(param.no1) < Integer.parseInt(param.no2)}"> --%>
+<%-- 		${param.no1}이 ${param.no2}보다 작습니다. --%>
+<%-- 	</c:if> --%>
+<%-- 	<c:if test="${Integer.parseInt(param.no1) = Integer.parseInt(param.no2)}"> --%>
+<%-- 		${param.no1}이 ${param.no2}와 같습니다. --%>
+<%-- 	</c:if> --%>
 	
+	<h2>c:choose</h2>
+	<c:choose> 
+		<c:when test="${num1 % 3 == 0}">
+			${num1}은 3의 배수입니다.
+		</c:when>
+		<c:when test="${num1 % 3 == 1}">
+			${num1}은 3으로 나눈 나머지가 1입니다.
+		</c:when>		
+		<c:otherwise>
+			${num1}은 3으로 나눈 나머지가 2입니다.
+		</c:otherwise>		
+	</c:choose>
 	
+	<h2>c:forEach</h2>
+	<div class="wrapper" style="color:deeppink;">
+		<c:forEach var="i" begin="1" end="6" step="2">
+			<h${i}>안녕${i}</h${i}>
+		</c:forEach>
+<%-- 		<c:forEach var="i" begin="6" end="1" step="-1"> --%>
+<!-- 		javax.servlet.ServletException: javax.servlet.jsp.JspTagException -->
+		<c:forEach var="i" begin="1" end="6">
+			<h${7-i}>안녕${7-i}</h${7-i}>
+		</c:forEach>
+	</div>
+	
+	<h2>c:url</h2>
+<%-- 	<img src="${pageContext.request.contextPath}/images/hyunta.jpg" alt="" /> --%>
+	<img src='<c:url value="/images/hyunta.jpg"/>' alt="" />
+	
+	<br /><br />
+	
+	<c:url var="link" value="coreBasic.jsp">
+		<c:param name="query">안녕</c:param>
+		<c:param name="type">img</c:param>
+		<c:param name="start">20200101</c:param>
+		<c:param name="end">20210316</c:param>
+	</c:url>
+	<a href="${link}">${link}</a>
+
 </body>
 </html>
 

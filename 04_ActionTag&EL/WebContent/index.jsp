@@ -16,6 +16,9 @@
 		<h3>JSTL - CustomAction Tag</h3>
 		<ul>
 			<li><a href="${pageContext.request.contextPath}/jstl/coreBasic.jsp?no1=370&no2=98">core-basic</a></li>
+			<li><a href="${pageContext.request.contextPath}/jstl/forEach.do">core - forEach</a></li>
+			<li><a href="${pageContext.request.contextPath}/jstl/format.jsp">format</a></li>
+			<li><a href="${pageContext.request.contextPath}/jstl/function.jsp">function</a></li>
 		</ul>
 		
 	<h2>EL</h2>
